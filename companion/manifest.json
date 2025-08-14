@@ -1,0 +1,26 @@
+{
+	"id": "innosonix-maxx",
+	"name": "Innosonix Maxx",
+	"shortname": "innosonix-maxx",
+	"description": "Module for controlling Innosonix Maxx Devices",
+	"version": "0.1.0",
+	"license": "MIT",
+	"repository": "git+https://github.com/bitfocus/companion-module-innosonix-maxx.git",
+	"bugs": "https://github.com/bitfocus/companion-module-innosonix-maxx/issues",
+	"maintainers": [
+		{
+			"name": "Alexander Kettner",
+			"email": "bazoo1q@gmail.com"
+		}
+	],
+	"runtime": {
+		"type": "node22",
+		"api": "nodejs-ipc",
+		"apiVersion": "0.0.0",
+		"entrypoint": "../dist/main.js"
+	},
+	"legacyIds": [],
+	"manufacturer": "Innosonix",
+	"products": ["Maxx"],
+	"keywords": ["Amplifier", "Innosonix", "Maxx", "Audio", "Amp"]
+}
