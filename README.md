@@ -5,3 +5,4 @@
 Updates
 
 0.1.0 - Initial module commit
+1.0.0 - First public release
