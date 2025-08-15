@@ -9,6 +9,7 @@ import { CompanionFeedbackDefinitions, CompanionVariableDefinition } from '@comp
 import { PowerDataPoint } from './data/settings/PowerDataPoint.js'
 import { AutoStandbyDataPoint } from './data/settings/AutoStandbyDataPoint.js'
 import { VolumeDataPoint } from './data/settings/dsp/VolumeDataPoint.js'
+import { DelayDataPoint } from './data/settings/dsp/DelayDataPoint.js'
 
 export class DeviceApi {
 	public self: ModuleInstance
@@ -31,6 +32,7 @@ export class DeviceApi {
 		this.dataPoints.push(new PowerDataPoint(this))
 		this.dataPoints.push(new AutoStandbyDataPoint(this))
 		this.dataPoints.push(new VolumeDataPoint(this))
+		this.dataPoints.push(new DelayDataPoint(this))
 
 		this.dataPoints.forEach((dataPoint) => {
 			dataPoint.onEnable()
@@ -46,10 +48,26 @@ export class DeviceApi {
 				return
 			}
 			this.self.log('debug', 'DeviceApi data timeout started')
-			this.dataPoints.forEach((dataPoint) => {
-				dataPoint.update()
-			})
-			this.self.log('debug', 'DeviceApi data timeout finished')
+
+			this.remoteDevice
+				.get('/settings')
+				.then((res) => {
+					if (res === undefined) {
+						this.self.log('error', 'Connection error: no response')
+						return
+					}
+					if (res.status != 200) {
+						this.self.log('error', 'Connection error: ' + res.statusText)
+						return
+					}
+					this.dataPoints.forEach((dataPoint) => {
+						dataPoint.update(res.data)
+					})
+					this.self.log('debug', 'DeviceApi data timeout finished')
+				})
+				.catch((err) => {
+					this.self.log('debug', 'Connection error: ' + err.message)
+				})
 		}, this.self.config.meteringInterval || 5000)
 	}
 

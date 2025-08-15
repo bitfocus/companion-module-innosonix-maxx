@@ -38,7 +38,7 @@ export class VolumeDataPoint extends DataPoint {
 						this.deviceApi.self.log('error', 'Error setting mute: ' + err.message)
 					})
 			},
-			name: 'Channel Volume',
+			name: 'Set Channel Volume',
 			options: [
 				{
 					id: 'channel',
@@ -67,14 +67,15 @@ export class VolumeDataPoint extends DataPoint {
 		}
 	}
 
-	update(): void {
-		void this.chVolumeArray().then((res: number[]) => {
-			this.volumeArray = res
-			this.deviceApi.self.log('debug', 'VolumeDataPoint updated: ' + this.volumeArray.join(', '))
-			this.deviceApi.self.checkFeedbacks('volume')
-			this.volumeArray.forEach((volume, index) => {
-				this.deviceApi.self.setVariableValues({ [`volume_ch_${index + 1}`]: volume })
-			})
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	update(settings: any): void {
+		this.volumeArray = settings.channel.map((channel: any) => {
+			return channel.dsp.volume.value
+		})
+		this.deviceApi.self.log('debug', 'VolumeDataPoint updated: ' + this.volumeArray.join(', '))
+		this.deviceApi.self.checkFeedbacks('volume')
+		this.volumeArray.forEach((volume, index) => {
+			this.deviceApi.self.setVariableValues({ [`volume_ch_${index + 1}`]: volume })
 		})
 	}
 

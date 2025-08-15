@@ -9,5 +9,6 @@ export abstract class DataPoint {
 
 	abstract onDisable(): void
 
-	abstract update(): void
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	abstract update(settings: any): void
 }

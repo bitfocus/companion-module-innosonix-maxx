@@ -46,7 +46,7 @@ export class AutoStandbyDataPoint extends DataPoint {
 						this.deviceApi.self.log('error', 'Error setting mute: ' + err.message)
 					})
 			},
-			name: 'Channel Autostandby',
+			name: 'Set Channel Autostandby',
 			options: [
 				{
 					id: 'channel',
@@ -91,14 +91,15 @@ export class AutoStandbyDataPoint extends DataPoint {
 		}
 	}
 
-	update(): void {
-		void this.chAutoStandbyArray().then((res: TypeAutoStandby[]) => {
-			this.autoStandByArray = res
-			this.deviceApi.self.log('debug', `AutoStandbyDataPoint updated: ${JSON.stringify(this.autoStandByArray)}`)
-			this.deviceApi.self.checkFeedbacks('autostandby')
-			this.autoStandByArray.forEach((autoStandby: TypeAutoStandby, index) => {
-				this.deviceApi.self.setVariableValues({ [`autostandby_ch_${index + 1}`]: JSON.stringify(autoStandby) })
-			})
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	update(settings: any): void {
+		this.autoStandByArray = settings.channel.map((channel: any) => {
+			return new TypeAutoStandby(channel.autostandby)
+		})
+		this.deviceApi.self.log('debug', `AutoStandbyDataPoint updated: ${JSON.stringify(this.autoStandByArray)}`)
+		this.deviceApi.self.checkFeedbacks('autostandby')
+		this.autoStandByArray.forEach((autoStandby: TypeAutoStandby, index) => {
+			this.deviceApi.self.setVariableValues({ [`autostandby_ch_${index + 1}`]: JSON.stringify(autoStandby) })
 		})
 	}
 
@@ -140,31 +141,6 @@ export class AutoStandbyDataPoint extends DataPoint {
 						return
 					}
 					resolve(true)
-				})
-				.catch((err) => {
-					reject(new Error(err.message))
-					this.deviceApi.self.log('debug', 'Connection error: ' + err.message)
-				})
-		})
-	}
-
-	async chAutoStandbyArray(): Promise<TypeAutoStandby[]> {
-		return new Promise<TypeAutoStandby[]>((resolve, reject) => {
-			this.deviceApi.remoteDevice
-				.get('/settings/channel')
-				.then((res) => {
-					if (res === undefined) {
-						reject(new Error('Connection error: no response'))
-						return
-					}
-					if (res.status != 200) {
-						reject(new Error('Connection error: ' + res.statusText))
-						return
-					}
-					const chAutoStandby = res.data.map((channel: any) => {
-						return new TypeAutoStandby(channel.autostandby)
-					})
-					resolve(chAutoStandby)
 				})
 				.catch((err) => {
 					reject(new Error(err.message))

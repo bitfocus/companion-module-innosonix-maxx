@@ -61,7 +61,7 @@ export class PowerDataPoint extends DataPoint {
 		}
 		this.deviceApi.feedbacks.power = {
 			type: 'boolean',
-			name: 'Channel Power',
+			name: 'Set Channel Power',
 			defaultStyle: {
 				bgcolor: combineRgb(0, 255, 0),
 				color: combineRgb(255, 255, 255),
@@ -90,14 +90,15 @@ export class PowerDataPoint extends DataPoint {
 		}
 	}
 
-	update(): void {
-		void this.chPowerArray().then((res: boolean[]) => {
-			this.powerArray = res
-			this.deviceApi.self.log('debug', 'PowerDataPoint updated: ' + this.powerArray.join(', '))
-			this.deviceApi.self.checkFeedbacks('mute')
-			this.powerArray.forEach((power, index) => {
-				this.deviceApi.self.setVariableValues({ [`power_ch_${index + 1}`]: power })
-			})
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	update(settings: any): void {
+		this.powerArray = settings.channel.map((channel: any) => {
+			return channel.ampenable.value
+		})
+		this.deviceApi.self.log('debug', 'PowerDataPoint updated: ' + this.powerArray.join(', '))
+		this.deviceApi.self.checkFeedbacks('mute')
+		this.powerArray.forEach((power, index) => {
+			this.deviceApi.self.setVariableValues({ [`power_ch_${index + 1}`]: power })
 		})
 	}
 
@@ -139,31 +140,6 @@ export class PowerDataPoint extends DataPoint {
 						return
 					}
 					resolve(state)
-				})
-				.catch((err) => {
-					reject(new Error(err.message))
-					this.deviceApi.self.log('debug', 'Connection error: ' + err.message)
-				})
-		})
-	}
-
-	async chPowerArray(): Promise<boolean[]> {
-		return new Promise<boolean[]>((resolve, reject) => {
-			this.deviceApi.remoteDevice
-				.get('/settings/channel')
-				.then((res) => {
-					if (res === undefined) {
-						reject(new Error('Connection error: no response'))
-						return
-					}
-					if (res.status != 200) {
-						reject(new Error('Connection error: ' + res.statusText))
-						return
-					}
-					const chPower = res.data.map((channel: any) => {
-						return channel.ampenable.value
-					})
-					resolve(chPower)
 				})
 				.catch((err) => {
 					reject(new Error(err.message))

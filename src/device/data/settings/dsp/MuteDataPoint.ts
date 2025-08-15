@@ -37,7 +37,7 @@ export class MuteDataPoint extends DataPoint {
 						this.deviceApi.self.log('error', 'Error setting mute: ' + err.message)
 					})
 			},
-			name: 'Channel Mute',
+			name: 'Set Channel Mute',
 			options: [
 				{
 					id: 'channel',
@@ -87,14 +87,15 @@ export class MuteDataPoint extends DataPoint {
 		}
 	}
 
-	update(): void {
-		void this.chMuteArray().then((res: boolean[]) => {
-			this.muteArray = res
-			this.deviceApi.self.log('debug', 'MuteDataPoint updated: ' + this.muteArray.join(', '))
-			this.deviceApi.self.checkFeedbacks('mute')
-			this.muteArray.forEach((mute, index) => {
-				this.deviceApi.self.setVariableValues({ [`mute_ch_${index + 1}`]: mute })
-			})
+	// eslint-disable-next-line @typescript-eslint/explicit-module-boundary-types
+	update(settings: any): void {
+		this.muteArray = settings.channel.map((channel: any) => {
+			return channel.dsp.mute.value
+		})
+		this.deviceApi.self.log('debug', 'MuteDataPoint updated: ' + this.muteArray.join(', '))
+		this.deviceApi.self.checkFeedbacks('mute')
+		this.muteArray.forEach((mute, index) => {
+			this.deviceApi.self.setVariableValues({ [`mute_ch_${index + 1}`]: mute })
 		})
 	}
 
@@ -136,31 +137,6 @@ export class MuteDataPoint extends DataPoint {
 						return
 					}
 					resolve(state)
-				})
-				.catch((err) => {
-					reject(new Error(err.message))
-					this.deviceApi.self.log('debug', 'Connection error: ' + err.message)
-				})
-		})
-	}
-
-	async chMuteArray(): Promise<boolean[]> {
-		return new Promise<boolean[]>((resolve, reject) => {
-			this.deviceApi.remoteDevice
-				.get('/settings/channel')
-				.then((res) => {
-					if (res === undefined) {
-						reject(new Error('Connection error: no response'))
-						return
-					}
-					if (res.status != 200) {
-						reject(new Error('Connection error: ' + res.statusText))
-						return
-					}
-					const chMute = res.data.map((channel: any) => {
-						return channel.dsp.mute.value
-					})
-					resolve(chMute)
 				})
 				.catch((err) => {
 					reject(new Error(err.message))

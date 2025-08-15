@@ -123,4 +123,12 @@ export class RemoteDevice {
 		}
 		return axios.delete(this._url + path, { headers: this._headers })
 	}
+
+	async options(path: string): Promise<AxiosResponse<any, any> | undefined> {
+		if (!this.isConnected) {
+			this.self.log('warn', 'Not connected')
+			return undefined
+		}
+		return axios.options(this._url + path, { headers: this._headers })
+	}
 }
