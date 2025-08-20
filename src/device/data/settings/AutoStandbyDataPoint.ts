@@ -21,9 +21,9 @@ export class AutoStandbyDataPoint extends DataPoint {
 		this.deviceApi.actions.autoStandbyCh = {
 			callback: async (event) => {
 				if (
-					(event.options.channel === undefined || event.options.enable === undefined,
-					event.options.threshold === undefined,
-					event.options.timeout === undefined)
+					(event.options.timeout === undefined,
+					event.options.channel === undefined || event.options.enable === undefined,
+					event.options.threshold === undefined)
 				) {
 					this.deviceApi.self.log('error', 'Channel or enable not defined')
 					return
@@ -66,11 +66,12 @@ export class AutoStandbyDataPoint extends DataPoint {
 				{
 					id: 'threshold',
 					type: 'number',
-					label: 'Threshold (in dB)',
+					label: 'Threshold (in dBFs)',
 					default: -80,
 					required: true,
-					min: -100,
-					max: 20,
+					min: -80,
+					max: 0,
+					step: 1,
 				},
 				{
 					id: 'timeout',
@@ -78,8 +79,9 @@ export class AutoStandbyDataPoint extends DataPoint {
 					label: 'Timeout (in seconds)',
 					default: 60,
 					required: true,
-					min: 1,
-					max: 3600,
+					min: 60,
+					max: 86400,
+					step: 1,
 				},
 			],
 		}
