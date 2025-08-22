@@ -24,7 +24,7 @@ export class ModuleInstance extends InstanceBase<ModuleConfig> {
 	}
 	// When module gets deleted
 	async destroy(): Promise<void> {
-		this.deviceApi?.remoteDevice.destroy()
+		this.deviceApi?.destroy()
 		this.log('debug', 'destroy')
 	}
 
