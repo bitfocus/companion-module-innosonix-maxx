@@ -40,7 +40,7 @@ export class PowerDataPoint extends DataPoint {
 						this.deviceApi.self.log('error', 'Error setting power: ' + err.message)
 					})
 			},
-			name: 'Channel Power',
+			name: 'Set Channel Power',
 			options: [
 				{
 					id: 'channel',
@@ -61,7 +61,7 @@ export class PowerDataPoint extends DataPoint {
 		}
 		this.deviceApi.feedbacks.power = {
 			type: 'boolean',
-			name: 'Set Channel Power',
+			name: 'Channel Power State',
 			defaultStyle: {
 				bgcolor: combineRgb(0, 255, 0),
 				color: combineRgb(255, 255, 255),
@@ -96,7 +96,7 @@ export class PowerDataPoint extends DataPoint {
 			return channel.ampenable.value
 		})
 		this.deviceApi.self.log('debug', 'PowerDataPoint updated: ' + this.powerArray.join(', '))
-		this.deviceApi.self.checkFeedbacks('mute')
+		this.deviceApi.self.checkFeedbacks('power')
 		this.powerArray.forEach((power, index) => {
 			this.deviceApi.self.setVariableValues({ [`power_ch_${index + 1}`]: power })
 		})
