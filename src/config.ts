@@ -48,7 +48,7 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			type: 'dropdown',
 			id: 'ampType',
 			label: 'Amplifier Type',
-			default: 'UMA04/POE',
+			default: 'UMA04_POE',
 			width: 4,
 			choices: Object.values(AmpType),
 		},
