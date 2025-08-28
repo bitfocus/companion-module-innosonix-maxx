@@ -11,27 +11,20 @@ export interface ModuleConfig {
 export function GetConfigFields(): SomeCompanionConfigField[] {
 	return [
 		{
+			type: 'dropdown',
+			id: 'ampType',
+			label: 'Amplifier Type',
+			default: 'UMA04_POE',
+			width: 4,
+			choices: Object.values(AmpType),
+		},
+		{
 			type: 'textinput',
 			id: 'host',
 			required: true,
 			label: 'Target IP',
-			width: 8,
+			width: 4,
 			regex: Regex.IP,
-		},
-		{
-			type: 'textinput',
-			id: 'token',
-			required: true,
-			label: 'Authentication Token',
-			width: 8,
-			default: 'f4005bf8507999192162d989d5a60823',
-		},
-		{
-			type: 'checkbox',
-			id: 'meteringOn',
-			label: 'Enable Metering?',
-			width: 2,
-			default: true,
 		},
 		{
 			type: 'number',
@@ -45,12 +38,12 @@ export function GetConfigFields(): SomeCompanionConfigField[] {
 			required: true,
 		},
 		{
-			type: 'dropdown',
-			id: 'ampType',
-			label: 'Amplifier Type',
-			default: 'UMA04_POE',
-			width: 4,
-			choices: Object.values(AmpType),
+			type: 'textinput',
+			id: 'token',
+			required: true,
+			label: 'Authentication Token',
+			width: 12,
+			default: 'f4005bf8507999192162d989d5a60823',
 		},
 	]
 }

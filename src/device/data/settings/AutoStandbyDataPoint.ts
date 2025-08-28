@@ -36,7 +36,7 @@ export class AutoStandbyDataPoint extends DataPoint {
 				this.setChAutoStandby(_ch, as)
 					.then(() => {
 						this.autoStandByArray[_ch - 1] = as
-						this.deviceApi.self.setVariableValues({ [`autostandby_ch_${_ch}`]: JSON.stringify(as) })
+						this.deviceApi.self.setVariableValues({ [`autostandby_ch_${_ch}`]: JSON.stringify(as.toReqData()) })
 						this.deviceApi.self.log(
 							'info',
 							'Set Autostandby: ' + JSON.stringify(as) + ' on channel ' + event.options.channel,
@@ -101,7 +101,9 @@ export class AutoStandbyDataPoint extends DataPoint {
 		this.deviceApi.self.log('debug', `AutoStandbyDataPoint updated: ${JSON.stringify(this.autoStandByArray)}`)
 		this.deviceApi.self.checkFeedbacks('autostandby')
 		this.autoStandByArray.forEach((autoStandby: TypeAutoStandby, index) => {
-			this.deviceApi.self.setVariableValues({ [`autostandby_ch_${index + 1}`]: JSON.stringify(autoStandby) })
+			this.deviceApi.self.setVariableValues({
+				[`autostandby_ch_${index + 1}`]: JSON.stringify(autoStandby.toReqData()),
+			})
 		})
 	}
 
