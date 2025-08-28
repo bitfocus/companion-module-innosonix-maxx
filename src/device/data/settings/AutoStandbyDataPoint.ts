@@ -88,7 +88,7 @@ export class AutoStandbyDataPoint extends DataPoint {
 		for (let i = 1; i <= AmpType[this.deviceApi.self.config.ampType].ch; i++) {
 			this.deviceApi.variables.push({
 				name: 'Autostandby Channel ' + i,
-				variableId: 'power_ch_' + i,
+				variableId: 'autostandby_ch_' + i,
 			})
 		}
 	}
