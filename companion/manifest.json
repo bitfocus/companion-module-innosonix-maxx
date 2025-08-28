@@ -3,7 +3,7 @@
 	"name": "Innosonix Maxx",
 	"shortname": "innosonix-maxx",
 	"description": "Module for controlling Innosonix Maxx Devices",
-	"version": "0.1.0",
+	"version": "1.0.1",
 	"license": "MIT",
 	"repository": "git+https://github.com/bitfocus/companion-module-innosonix-maxx.git",
 	"bugs": "https://github.com/bitfocus/companion-module-innosonix-maxx/issues",
