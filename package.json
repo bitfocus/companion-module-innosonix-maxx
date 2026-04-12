@@ -20,7 +20,7 @@
   },
   "dependencies": {
     "@companion-module/base": "~1.11.2",
-    "axios": "^1.13.5",
+    "axios": "^1.15.0",
     "type-fest": "^4.33.0"
   },
   "devDependencies": {
